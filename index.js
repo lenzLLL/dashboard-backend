@@ -1,0 +1,43 @@
+const express = require("express")
+const dbConnect = require("./config/dbConnect")
+const app = express()
+const dotenv = require("dotenv").config()
+const authRoute = require("./routes/authRoute")
+const PORT = process.env.PORT ||8080 
+const bodyparser = require("body-parser")
+const cookieParser = require("cookie-parser")
+const { notFound, errorHandler } = require("./middlewares/ErrorHandler")
+const productRoute = require("./routes/productRouter")
+const blogRoute = require("./routes/blogRoute")
+const categoryRoute = require("./routes/categoryRoute")
+const BCategoryRoute = require("./routes/bCategoryRoute")
+const brandRouter = require("./routes/brandRouter")
+const couponRouter = require("./routes/couponRouter")
+const morgan= require("morgan")
+const cors = require("cors")
+const cloudinary = require("cloudinary")
+const errorMiddleWare = require("./middlewares/Error")
+dbConnect()
+cloudinary.config({
+    cloud_name:process.env.CLOUDINARY_NAME,
+    api_key:process.env.CLOUDINARY_API_KEY,
+    api_secret:process.env.CLOUDINARY_API_SECRET
+
+})
+app.use(cors())
+app.use(cookieParser())
+app.use(morgan("sev"))
+app.use(bodyparser.urlencoded({extended:false}))
+app.use(express.json({limit: '50mb'}))
+app.use(bodyparser.json())
+app.use("/api/user/",authRoute)
+app.use("/api/product",productRoute)
+app.use("/api/blog",blogRoute)
+app.use("/api/brand",brandRouter)
+app.use("/api/category",categoryRoute)
+app.use("/api/bcategory",BCategoryRoute)
+app.use("/api/coupon",couponRouter)
+app.use(errorMiddleWare)
+app.listen(PORT,()=>{
+    console.log("server is running on port "+PORT)
+})

@@ -1,0 +1,33 @@
+const {updatePassword,forgetPassword, createUser, loginUserCtrl, getAllUsers, getOneUser, deleteUser, updateUser, blockUser, unBlockUser, handleRefreshToken, logout, resetPasswordToken, addToWishList, loginAdmin, getWishList, saveAddress, createCart, getUserCart, emptyCart, applyCoupon, createOrder, getOrders, updateOrder, getUserDetails } = require("../controller/userCtrl")
+const {authMiddleWare,isAdmin} = require("../middlewares/authMiddleware")
+const router = require("express").Router()
+
+router.get("/cool",authMiddleWare,getWishList)
+router.post("/order",authMiddleWare,createOrder)
+router.put("/order/:id",authMiddleWare,updateOrder)
+router.get("/order",authMiddleWare,getOrders)
+router.put("/save-address",authMiddleWare,saveAddress)
+router.post("/cart",authMiddleWare, createCart)
+router.get("/deconnexion",logout)
+router.post("/register",createUser)
+router.post("/cart/coupon",authMiddleWare,applyCoupon)
+router.post("/login",loginUserCtrl)
+router.put("/wished",authMiddleWare,addToWishList)
+router.post("/login-admin",loginAdmin)
+router.get("/me",authMiddleWare,getUserDetails)
+router.put("/resetpassword/:token",resetPasswordToken)
+router.get("/all",getAllUsers)
+router.get("/cart",authMiddleWare, getUserCart)
+router.delete("/cart",authMiddleWare,emptyCart)
+router.get("/refresh",handleRefreshToken)
+router.put("/password",authMiddleWare,updatePassword)
+router.get("/:id",authMiddleWare,isAdmin, getOneUser)
+router.delete("/:id",deleteUser)
+router.post("/forgetpassword",forgetPassword)
+router.put("/:id",authMiddleWare,updateUser)
+router.put("/block/:id",authMiddleWare,isAdmin,blockUser)
+router.put("/unblock/:id",authMiddleWare,isAdmin,unBlockUser)
+
+
+
+module.exports = router
